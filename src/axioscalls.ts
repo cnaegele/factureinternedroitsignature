@@ -123,7 +123,7 @@ export async function sauveMontantMax(idOrgunit: number, idEmploye: number, mont
 export async function sauvePrincipal(idOrgunit: number, idEmploye: number): Promise<ApiResponseMessage> {
     const odata = {
         idorgunit: idOrgunit,
-        idemploye: idEmploye,
+        idemploye: idEmploye
     }
     const jdata: string = JSON.stringify(odata)
     const page: string = '/goeland/gestion_spec/afffactureint_droitsignature/axios/afffactureint_empsignature_principal_sauve.php'
@@ -144,7 +144,7 @@ export async function sauvePrincipal(idOrgunit: number, idEmploye: number): Prom
 export async function supprimeDroitSignature(idOrgunit: number, idEmploye: number): Promise<ApiResponseMessage> {
     const odata = {
         idorgunit: idOrgunit,
-        idemploye: idEmploye,
+        idemploye: idEmploye
     }
     const jdata: string = JSON.stringify(odata)
     const page: string = '/goeland/gestion_spec/afffactureint_droitsignature/axios/afffactureint_empsignature_supprime.php'
@@ -165,7 +165,7 @@ export async function supprimeDroitSignature(idOrgunit: number, idEmploye: numbe
 export async function sauveDroitSignature(idOrgunit: number, idEmploye: number): Promise<ApiResponseMessage> {
     const odata = {
         idorgunit: idOrgunit,
-        idemploye: idEmploye,
+        idemploye: idEmploye
     }
     const jdata: string = JSON.stringify(odata)
     const page: string = '/goeland/gestion_spec/afffactureint_droitsignature/axios/afffactureint_empsignature_sauve.php'
