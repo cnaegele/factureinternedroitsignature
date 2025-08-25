@@ -21,6 +21,16 @@ export interface Direction {
   orderliste: string
   services: Service[]
 }
+export interface EmployeChoix {
+  idemploye: number
+  nom: string
+  prenom: string
+  bactif: number
+  login: string
+  unite: string
+  directionabr?: string
+  serviceabr?: string
+}
 export interface ApiResponseDS {
   success: boolean
   message: string
@@ -31,8 +41,12 @@ export interface ApiResponseEmpS {
   message: string
   data?: Employe[]
 }
+export interface ApiResponseMessage {
+  success: boolean
+  message: string
+}
 // Interface générique pour les réponses API
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
   success: boolean
   message: string
   data?: T[]
@@ -68,6 +82,102 @@ export async function getEmployesSignataire(idUO: number): Promise<ApiResponseEm
         }
         console.log(respData)
         return respData
+    } catch (error) {
+        return traiteAxiosError(error as AxiosError)
+    }
+}
+
+export async function getEmployesListe(critere: string, bretInactif: boolean): Promise<EmployeChoix[]> {
+    const page: string = '/goeland/gestion_spec/afffactureint_droitsignature/axios/employes_liste.php'
+    const url: string = `${server}${page}`
+    const params = new URLSearchParams([['scritere', critere], ['bretinactif', bretInactif.toString()]])
+    const response: AxiosResponse<EmployeChoix[]> = await axios.get(url, { params })
+    return response.data
+}
+
+export async function sauveMontantMax(idOrgunit: number, idEmploye: number, montantMax?: number): Promise<ApiResponseMessage> {
+    if (typeof montantMax === 'undefined') {
+        montantMax = 0.0
+    }
+    const odata = {
+        idorgunit: idOrgunit,
+        idemploye: idEmploye,
+        montantmax: montantMax
+    }
+    const jdata: string = JSON.stringify(odata)
+    const page: string = '/goeland/gestion_spec/afffactureint_droitsignature/axios/afffactureint_empsignature_montantmax_sauve.php'
+    const url: string = `${server}${page}`
+    try {
+        const response: ApiResponseMessage = await axios.post(url, jdata, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log(response)
+        return response
+    } catch (error) {
+        return traiteAxiosError(error as AxiosError)
+    }
+}
+
+export async function sauvePrincipal(idOrgunit: number, idEmploye: number): Promise<ApiResponseMessage> {
+    const odata = {
+        idorgunit: idOrgunit,
+        idemploye: idEmploye,
+    }
+    const jdata: string = JSON.stringify(odata)
+    const page: string = '/goeland/gestion_spec/afffactureint_droitsignature/axios/afffactureint_empsignature_principal_sauve.php'
+    const url: string = `${server}${page}`
+    try {
+        const response: ApiResponseMessage = await axios.post(url, jdata, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log(response)
+        return response
+    } catch (error) {
+        return traiteAxiosError(error as AxiosError)
+    }
+}
+
+export async function supprimeDroitSignature(idOrgunit: number, idEmploye: number): Promise<ApiResponseMessage> {
+    const odata = {
+        idorgunit: idOrgunit,
+        idemploye: idEmploye,
+    }
+    const jdata: string = JSON.stringify(odata)
+    const page: string = '/goeland/gestion_spec/afffactureint_droitsignature/axios/afffactureint_empsignature_supprime.php'
+    const url: string = `${server}${page}`
+    try {
+        const response: ApiResponseMessage = await axios.post(url, jdata, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log(response)
+        return response
+    } catch (error) {
+        return traiteAxiosError(error as AxiosError)
+    }
+}
+
+export async function sauveDroitSignature(idOrgunit: number, idEmploye: number): Promise<ApiResponseMessage> {
+    const odata = {
+        idorgunit: idOrgunit,
+        idemploye: idEmploye,
+    }
+    const jdata: string = JSON.stringify(odata)
+    const page: string = '/goeland/gestion_spec/afffactureint_droitsignature/axios/afffactureint_empsignature_sauve.php'
+    const url: string = `${server}${page}`
+    try {
+        const response: ApiResponseMessage = await axios.post(url, jdata, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        console.log(response)
+        return response
     } catch (error) {
         return traiteAxiosError(error as AxiosError)
     }

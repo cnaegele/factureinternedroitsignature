@@ -14,7 +14,7 @@ export interface Employe {
   prenom: string
   actif: number
   unite: string
-  montantmax: number
+  montantmax?: number
   principal: number
 }
 

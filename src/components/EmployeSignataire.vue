@@ -12,6 +12,7 @@
       <div 
         v-for="employe in lesDatas.employesSignataire" 
         :key="employe.id" 
+        :index="employe.id" 
         class="employe-card"
         :class="{ 'employe-inactif': !employe.actif }"
       >
@@ -74,10 +75,10 @@
 
 <script setup lang="ts">
 import type { Employe } from '@/stores/datastore.ts'
-import type { ApiResponseEmpS } from '@/axioscalls.ts'
+import type { ApiResponseEmpS, ApiResponseMessage } from '@/axioscalls.ts'
 import { ref, watch } from 'vue'
 import { useDataStore } from '@/stores/datastore.ts'
-import { getEmployesSignataire } from '@/axioscalls.ts'
+import { getEmployesSignataire, sauveMontantMax, sauvePrincipal, supprimeDroitSignature } from '@/axioscalls.ts'
 const lesDatas = useDataStore()
 watch(() => lesDatas.idService, async (newValue) => {
     console.log(`service choisi: ${lesDatas.idService}`)
@@ -87,27 +88,31 @@ watch(() => lesDatas.idService, async (newValue) => {
 })
 
 // Fonction pour gérer le changement de montant max
-const onMontantChange = (employe: Employe) => {
-  console.log(`Montant modifié pour ${employe.nom}: ${employe.montantmax}`)
-  // Ici vous pouvez ajouter la logique pour sauvegarder automatiquement
-  // ou marquer l'employé comme modifié
+const onMontantChange = async (employe: Employe) => {
+    console.log(`Montant modifié pour ${employe.nom}: ${employe.montantmax}`)
+    const response: ApiResponseMessage = await sauveMontantMax(lesDatas.idService, employe.id, employe.montantmax)
+    console.log(response)      
 }
 
 // Fonction pour définir l'employé principal
-const setPrincipal = (employeId: number) => {
+const setPrincipal = async (employeId: number) => {
   // Remettre tous les employés à principal = 0
   lesDatas.employesSignataire.forEach(emp => {
     emp.principal = emp.id === employeId ? 1 : 0
   })
   
   console.log(`Employé principal défini: ${employeId}`)
-  // Ici vous pouvez ajouter la logique pour sauvegarder
+    const response: ApiResponseMessage = await sauvePrincipal(lesDatas.idService, employeId)
+    console.log(response)      
 }
 
 // Fonction supprime (signature seulement, à implémenter selon vos besoins)
-const supprime = (id: number) => {
+const supprime = async (id: number) => {
   // Cette fonction sera implémentée selon vos besoins
   console.log(`Suppression demandée pour l'employé ID: ${id}`)
+  const response: ApiResponseMessage = await supprimeDroitSignature(lesDatas.idService, id)
+  const responseReaff: ApiResponseEmpS = await getEmployesSignataire(lesDatas.idService)
+  lesDatas.employesSignataire = responseReaff.success && responseReaff.data ? responseReaff.data : []
 }
 </script>
 
