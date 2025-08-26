@@ -11,7 +11,7 @@ if (array_key_exists('empid', $_SESSION)) {
 }
 if ($idCaller > 0) {
     $pseudoWSEmployeSecurite = new CNWSEmployeSecurite();
-    if ($pseudoWSEmployeSecurite->isInGroupe($idCaller, 'GoelandManager')) {
+    if ($pseudoWSEmployeSecurite->isInGroupe($idCaller, 'AffFactureIntGestionDroitsSignature')) {
         $jsonData = file_get_contents('php://input');
         $oData = json_decode($jsonData);
         $idOrgunit = $oData->idorgunit;

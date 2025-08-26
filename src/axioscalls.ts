@@ -7,6 +7,15 @@ if (import.meta.env.DEV) {
     server = 'https://mygolux.lausanne.ch'    
 }
 
+export interface Utilisateur {
+  id_employe?: number
+  nom_employe?: string
+  prenom_employe?: string
+  login_employe?: string
+  groupesecurite?: string
+  bingroupe?: number
+  message?: string
+}
 export interface Service {
   iduo: number
   nomuo: string
@@ -50,6 +59,15 @@ export interface ApiResponse<T> {
   success: boolean
   message: string
   data?: T[]
+}
+
+export async function getDataUserInfo(groupeSecurite: string): Promise<Utilisateur> {
+    const page: string = '/goeland/gestion_spec/g_login_f5.php'
+    const url: string = `${server}${page}`
+    const params = new URLSearchParams([['groupesecurite', groupeSecurite]])
+    const response: AxiosResponse<Utilisateur> = await axios.get(url, { params })
+    console.log(response.data)
+    return response.data
 }
 
 export async function getDirectionsServices(): Promise<ApiResponseDS> {
